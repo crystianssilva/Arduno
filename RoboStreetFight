@@ -1,0 +1,104 @@
+#define MD_EN 4 // pino enable motor direito
+#define MD_A 5 //pino IN1
+#define MD_B 6 //pino IN2
+#define ME_EN 9 //Pino enable motor esquero
+#define ME_A 7 //pino IN3
+#define ME_B 8 //pino IN4
+#define Echo 3 //pino Echo
+#define Trig 2 //Pino Trig
+#define Sd 10// sensor direito
+#define Se 11 // sensor esquerdo
+float tempo;
+float distancia;
+
+void setup() {
+  // put your setup code here, to run once:
+pinMode (MD_A, OUTPUT);
+pinMode (MD_B, OUTPUT);
+pinMode (ME_A, OUTPUT);
+pinMode (ME_B, OUTPUT);
+pinMode (Trig, OUTPUT);
+pinMode (Echo, INPUT);
+pinMode (Sd, INPUT);
+pinMode (Se, INPUT);
+digitalWrite (MD_EN, 1);
+digitalWrite (ME_EN, 1);
+Serial.begin (9600);
+}
+
+void loop() {
+  digitalWrite (Trig, 1);
+  delayMicroseconds(10);
+  digitalWrite (Trig,0);
+
+  tempo = pulseIn (Echo, 1);
+  distancia = tempo /58;
+
+if (digitalRead(Sd)==0 && (digitalRead(Se)==1)) {
+ 
+   
+    // parar:
+    digitalWrite(MD_A, 0);
+    digitalWrite(MD_B, 0);
+    digitalWrite(ME_A, 0);
+    digitalWrite(ME_B, 0);
+    delay(300);
+   
+    // Giro Proprio eixo
+    digitalWrite(MD_A, 1);
+    digitalWrite(MD_B, 0);
+    digitalWrite(ME_A, 0);
+    digitalWrite(ME_B, 0);
+    delay(1000);}
+
+if (digitalRead(Sd)==1 && (digitalRead(Se)==0)) {
+ 
+   
+    // parar:
+    digitalWrite(MD_A, 0);
+    digitalWrite(MD_B, 0);
+    digitalWrite(ME_A, 0);
+    digitalWrite(ME_B, 0);
+    delay(300);
+   
+    // Giro Proprio eixo
+    digitalWrite(MD_A, 0);
+    digitalWrite(MD_B, 0);
+    digitalWrite(ME_A, 1);
+    digitalWrite(ME_B, 0);
+    delay(200);}
+   
+if (digitalRead(Sd)==0 && (digitalRead(Se)==0)) {
+ 
+   
+    // parar:
+    digitalWrite(MD_A, 0);
+    digitalWrite(MD_B, 0);
+    digitalWrite(ME_A, 0);
+    digitalWrite(ME_B, 0);
+    delay(300);
+   
+    // Giro Proprio eixo
+    digitalWrite(MD_A, 1);
+    digitalWrite(MD_B, 0);
+    digitalWrite(ME_A, 1);
+    digitalWrite(ME_B, 0);
+    delay(200);}
+
+if (distancia > 20){
+   // Giro Proprio eixo
+    digitalWrite(MD_A, 1);
+    digitalWrite(MD_B, 0);
+    digitalWrite(ME_A, 0);
+    digitalWrite(ME_B, 1);
+    }
+if (distancia < 20) {
+    // Motor Direito para frente:
+    digitalWrite(MD_A, 0);
+    digitalWrite(MD_B, 1);
+    // Motor Esquerdo para frente:
+    digitalWrite(ME_A, 0);
+    digitalWrite(ME_B, 1);
+  }
+  }
+  
